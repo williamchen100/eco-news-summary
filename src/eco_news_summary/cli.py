@@ -56,7 +56,7 @@ def make_client(provider: str) -> tuple[OpenAI, str]:
 
     # 預設：本地 Ollama（使用它的 OpenAI 相容端點 /v1，不需要真正的金鑰）
     base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
-    model = os.getenv("OLLAMA_MODEL", "llama3.2")
+    model = os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
     return OpenAI(api_key="ollama", base_url=f"{base_url}/v1", timeout=300), model
 
 

@@ -54,10 +54,11 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 3. 下載模型：
 
 ```bash
-ollama pull llama3.2
-# 電腦較慢可以用更小的模型：
-# ollama pull llama3.2:1b
+ollama pull qwen2.5:14b
 ```
+
+> 💡 預設模型 `qwen2.5:14b` 約 9GB，執行時大約佔用 9GB VRAM（例如 16GB 顯示卡用掉一半多一點，不會吃滿），中文表現也比小模型好。
+> 較輕的電腦或沒有獨立顯示卡，可以改用小模型：先 `ollama pull llama3.2:1b`（或 `qwen2.5:1.5b`），執行時加上 `--model llama3.2:1b`（或 `--model qwen2.5:1.5b`）。
 
 ### 3. 安裝套件
 
@@ -70,13 +71,13 @@ uv sync
 ### 4. 執行
 
 ```bash
-# 串流摘要（預設使用 llama3.2）
+# 串流摘要（預設使用 qwen2.5:14b）
 uv run eco-news-summary samples/01_black_bear.txt
 
 # 結構化 JSON 輸出
 uv run eco-news-summary samples/02_wetland.txt --json
 
-# 指定其他模型
+# 指定其他（較小的）模型
 uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b
 
 # 查看所有參數
@@ -96,7 +97,7 @@ cp .env.example .env
 | 變數 | 預設值 | 說明 |
 | --- | --- | --- |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama 位址 |
-| `OLLAMA_MODEL` | `llama3.2` | 預設的本地模型 |
+| `OLLAMA_MODEL` | `qwen2.5:14b` | 預設的本地模型 |
 | `CLOUD_API_KEY` | （無） | 雲端 API 金鑰，只有用 `--provider cloud` 才需要 |
 | `CLOUD_BASE_URL` | （無） | 雲端 OpenAI 相容 API 位址，例如 `https://api.openai.com/v1` |
 | `CLOUD_MODEL` | （無） | 雲端模型名稱，例如 `gpt-4o-mini` |

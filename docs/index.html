@@ -24,7 +24,7 @@
       <ul>
         <li><strong>主要功能：串流摘要</strong>——模型每產生一小段文字就立刻顯示，不用等全部完成。</li>
         <li><strong>加分功能：結構化輸出</strong>——加上 <code>--json</code>，依 JSON Schema 輸出 <code>title</code>、<code>key_points</code>、<code>topics</code>、<code>sentiment</code>，並用 Pydantic 驗證格式。</li>
-        <li><strong>預設使用本地 Ollama 模型</strong>（例如 <code>llama3.2</code>），不需要任何 API 金鑰；若在 <code>.env</code> 設定雲端 OpenAI 相容 API，也可以用 <code>--provider cloud</code> 切換。</li>
+        <li><strong>預設使用本地 Ollama 模型</strong>（預設 <code>qwen2.5:14b</code>），不需要任何 API 金鑰；若在 <code>.env</code> 設定雲端 OpenAI 相容 API，也可以用 <code>--provider cloud</code> 切換。</li>
         <li><strong>錯誤處理</strong>：Ollama 沒開、模型沒下載、檔案不存在、雲端金鑰沒設定時，都會顯示中文說明與解決方法。</li>
         <li>使用 <strong>uv</strong> 管理 Python 環境與套件；用 <strong>GitHub Actions</strong> 自動部署本頁面到 GitHub Pages。</li>
       </ul>
@@ -40,13 +40,13 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
       <h3>2. 安裝 Ollama 並下載模型</h3>
       <p>到 <a href="https://ollama.com/download">ollama.com/download</a> 下載安裝，然後：</p>
-      <pre><code>ollama pull llama3.2
-# 電腦較慢可改用小模型：ollama pull llama3.2:1b</code></pre>
+      <pre><code>ollama pull qwen2.5:14b</code></pre>
+      <p class="note">預設模型 <code>qwen2.5:14b</code> 約 9GB，執行時大約佔用 9GB VRAM（16GB 顯示卡用掉一半多一點，不會吃滿）。較輕的電腦或沒有獨立顯示卡，可改用小模型：<code>ollama pull llama3.2:1b</code>（或 <code>qwen2.5:1.5b</code>），執行時加上 <code>--model llama3.2:1b</code>（或 <code>--model qwen2.5:1.5b</code>）。</p>
       <h3>3. 安裝套件並執行</h3>
       <pre><code>uv sync
-uv run eco-news-summary samples/01_black_bear.txt              # 串流摘要
+uv run eco-news-summary samples/01_black_bear.txt              # 串流摘要（預設 qwen2.5:14b）
 uv run eco-news-summary samples/02_wetland.txt --json          # 結構化 JSON 輸出
-uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b</code></pre>
+uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b   # 改用小模型</code></pre>
       <h3>4.（選用）使用雲端模型</h3>
       <pre><code>cp .env.example .env    # 在 .env 填入 CLOUD_API_KEY 等設定
 uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
@@ -55,8 +55,13 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
 
     <section id="result">
       <h2>執行結果</h2>
-      <p class="note">以下是實際執行的輸出（未經修改）。測試環境：Linux（僅 CPU）、Ollama、模型 <code>llama3.2:1b</code>，執行日期 2026-10-23。每篇約 2～4 秒完成。</p>
-      <h3>串流摘要：01_black_bear.txt</h3>
+      <p class="note">以下是實際執行的輸出（未經修改），每段都標明使用的模型。測試環境：Linux（僅 CPU、無 GPU）、Ollama，執行日期 2026-10-23。因為測試機沒有 GPU，這裡使用的是小模型 <code>llama3.2:1b</code> 與 <code>qwen2.5:1.5b</code>（每篇約 2～4 秒），<strong>不是</strong>預設的 <code>qwen2.5:14b</code>。</p>
+      <div class="todo">
+        <p><strong>✏️【待學生補上】預設模型 qwen2.5:14b 的執行結果：</strong>請在自己的電腦（有 GPU）執行下面指令，把真實輸出貼在這裡：</p>
+        <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
+（請貼上 qwen2.5:14b 的實際輸出）</code></pre>
+      </div>
+      <h3>串流摘要：01_black_bear.txt（模型：llama3.2:1b）</h3>
       <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model llama3.2:1b
 [模型] ollama / llama3.2:1b
 - Taiwanese 黑熊出現地點比前一年更靠近登山步道
@@ -64,14 +69,14 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
 - 黑熊出現的地點可能導致登山客不安全
 - 黑熊族群數量仍然稀少
 -獵具誤傷是黑熊主要威脅</code></pre>
-      <h3>串流摘要：02_wetland.txt</h3>
+      <h3>串流摘要：02_wetland.txt（模型：llama3.2:1b）</h3>
       <pre><code>$ uv run eco-news-summary samples/02_wetland.txt --model llama3.2:1b
 [模型] ollama / llama3.2:1b
 -河口濕地冬候鳥數量回升
 -志工持續清除外來種植物
 -黑面琵鷺數量增加
 -過去兩年清除外來植物影響了水鳥休息空間</code></pre>
-      <h3>串流摘要：03_coral_reef.txt</h3>
+      <h3>串流摘要：03_coral_reef.txt（模型：llama3.2:1b）</h3>
       <pre><code>$ uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b
 [模型] ollama / llama3.2:1b
 - 今年夏天東部海域水溫高於往年平均
@@ -79,7 +84,7 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
 - 白化是珊瑚在高溫壓力下失去體內共生藻的結果
 - 高溫持續影響珊瑚可能大量死亡
 - 遊客浮潛時不要踩踏或觸摸珊瑚</code></pre>
-      <h3>結構化輸出（--json）：02_wetland.txt</h3>
+      <h3>結構化輸出（--json）：02_wetland.txt（模型：llama3.2:1b）</h3>
       <pre><code>$ uv run eco-news-summary samples/02_wetland.txt --model llama3.2:1b --json
 [模型] ollama / llama3.2:1b
 {
@@ -103,7 +108,7 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
       <ul>
         <li>1B 小模型速度快，但偶爾會夾雜英文（例如「Taiwanese」）、格式不一致（「-」後少了空格），或把數字套錯對象（原文「多了 20 隻」指的是黑面琵鷺，不是全部鳥類）。</li>
         <li>濕地那篇的第 4 點也和原文意思不同：原文說清除外來植物讓覓食空間<strong>變大</strong>，影響休息的是道路工程。</li>
-        <li>換成中文能力較好的 <code>qwen2.5:1.5b</code>，同一篇黑熊新聞的摘要明顯比較完整：</li>
+        <li>換成中文能力較好的 <code>qwen2.5:1.5b</code>，同一篇黑熊新聞的摘要明顯比較完整（模型：qwen2.5:1.5b）：</li>
       </ul>
       <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model qwen2.5:1.5b
 [模型] ollama / qwen2.5:1.5b
@@ -113,13 +118,13 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
 - 保育團體呼籲民眾發現不明獸鋏時立即通報，以保護臺灣黑熊族群免受獵具誤傷。</code></pre>
       <h3>錯誤處理：Ollama 沒有啟動時</h3>
       <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
-[模型] ollama / llama3.2
+[模型] ollama / qwen2.5:14b
 
 錯誤：連不到 Ollama（http://localhost:11434/v1/）。
 請確認：
   1. 已安裝 Ollama：https://ollama.com/download
   2. Ollama 正在執行：另開終端機執行 `ollama serve`（或開啟 Ollama App）
-  3. 已下載模型：`ollama pull llama3.2`</code></pre>
+  3. 已下載模型：`ollama pull qwen2.5:14b`</code></pre>
     </section>
 
     <section id="ai">
@@ -131,7 +136,7 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
         <li>撰寫三篇虛構的範例新聞（<code>samples/</code>）。</li>
         <li>撰寫 README 與本頁面（HTML/CSS）的初稿。</li>
       </ul>
-      <p>「執行結果」區塊中的輸出是程式實際呼叫本地模型所產生的，沒有手動編修。程式本身執行時呼叫的 LLM 是 Ollama 上的開源模型（預設 <code>llama3.2</code>）。</p>
+      <p>「執行結果」區塊中的輸出是程式實際呼叫本地模型所產生的，沒有手動編修。程式本身執行時呼叫的 LLM 是 Ollama 上的開源模型（預設 <code>qwen2.5:14b</code>）。</p>
       <div class="todo">
         <p><strong>✏️【待學生填寫】我自己修改與驗證的部分：</strong></p>
         <ul>
