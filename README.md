@@ -20,9 +20,13 @@
 eco-news-summary/
 ├── .github/workflows/pages.yml   # GitHub Actions：把 docs/ 部署到 GitHub Pages
 ├── docs/                         # GitHub Pages 靜態網站
-│   ├── index.html
+│   ├── index.html                # 首頁：做了什麼＋各頁導覽
+│   ├── demo.html                 # 線上試玩
+│   ├── run.html                  # 怎麼執行
+│   ├── results.html              # 執行結果
+│   ├── ai.html                   # AI 使用說明
 │   ├── app.js                    # 線上試玩：瀏覽器直接呼叫本機 Ollama
-│   ├── style.css
+│   ├── style.css                 # 所有頁面共用的樣式
 │   └── samples/                  # 範例文章副本（給網頁載入）
 ├── samples/                      # 三篇自行撰寫的「虛構」範例新聞
 │   ├── 01_black_bear.txt
@@ -108,7 +112,7 @@ cp .env.example .env
 
 ## 網頁線上試玩（連到自己電腦的 Ollama）
 
-GitHub Pages 網站上的「線上試玩」區塊可以直接在瀏覽器裡產生摘要（串流顯示，也可勾選 JSON 結構化輸出）。網頁是用純 JavaScript（`docs/app.js`）直接呼叫**使用者自己電腦上的** Ollama（`http://localhost:11434` 的 `/api/tags`、`/api/chat`），不需要任何金鑰，新聞文字也不會送到別的伺服器。範例文章的副本放在 `docs/samples/`，供網頁載入。
+GitHub Pages 網站的「線上試玩」頁面（`docs/demo.html`）可以直接在瀏覽器裡產生摘要（串流顯示，也可勾選 JSON 結構化輸出）。網頁是用純 JavaScript（`docs/app.js`）直接呼叫**使用者自己電腦上的** Ollama（`http://localhost:11434` 的 `/api/tags`、`/api/chat`），不需要任何金鑰，新聞文字也不會送到別的伺服器。範例文章的副本放在 `docs/samples/`，供網頁載入。
 
 Ollama 預設會拒絕其他網站的連線，所以要用 `OLLAMA_ORIGINS` 允許 Pages 網址：
 
@@ -126,11 +130,11 @@ OLLAMA_ORIGINS="https://<username>.github.io" ollama serve
 
 - 也可以設成 `*`（允許任何網站），比較簡單但較不安全。
 - Chrome、Edge、Firefox 允許 HTTPS 網頁連到 `http://localhost`；Safari 可能會封鎖。
-- 本機測試網頁：`cd docs && python -m http.server 8000`，再開 <http://localhost:8000>（localhost 來源 Ollama 預設就允許）。
+- 本機測試網頁：`cd docs && python -m http.server 8000`，再開 <http://localhost:8000/demo.html>（localhost 來源 Ollama 預設就允許）。
 
 ## 執行結果
 
-實際執行輸出請見 GitHub Pages 網站的「執行結果」區塊（`docs/index.html`）。
+實際執行輸出請見 GitHub Pages 網站的「執行結果」頁面（`docs/results.html`）。
 
 ## GitHub Pages 部署
 
@@ -140,4 +144,4 @@ OLLAMA_ORIGINS="https://<username>.github.io" ollama serve
 
 ## AI 使用說明
 
-本作業使用 Grok Bot（對話式 AI 程式助手）協助產生程式初版、GitHub Actions 工作流程、範例新聞與文件初稿，詳細說明請見網站的「AI 使用說明」區塊。
+本作業使用 Grok Bot（對話式 AI 程式助手）協助產生程式初版、GitHub Actions 工作流程、範例新聞與文件初稿，詳細說明請見網站的「AI 使用說明」頁面（`docs/ai.html`）。

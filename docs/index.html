@@ -12,11 +12,11 @@
     <p>用本地 LLM（Ollama）以串流方式摘要生態保育新聞｜期中作業</p>
   </header>
   <nav>
-    <a href="#what">做了什麼</a>
-    <a href="#demo">線上試玩</a>
-    <a href="#how">怎麼執行</a>
-    <a href="#result">執行結果</a>
-    <a href="#ai">AI 使用說明</a>
+    <a href="index.html" class="active" aria-current="page">首頁</a>
+    <a href="demo.html">線上試玩</a>
+    <a href="run.html">怎麼執行</a>
+    <a href="results.html">執行結果</a>
+    <a href="ai.html">AI 使用說明</a>
   </nav>
   <main>
     <section id="what">
@@ -27,201 +27,21 @@
         <li><strong>加分功能：結構化輸出</strong>——加上 <code>--json</code>，依 JSON Schema 輸出 <code>title</code>、<code>key_points</code>、<code>topics</code>、<code>sentiment</code>，並用 Pydantic 驗證格式。</li>
         <li><strong>預設使用本地 Ollama 模型</strong>（預設 <code>qwen2.5:14b</code>），不需要任何 API 金鑰；若在 <code>.env</code> 設定雲端 OpenAI 相容 API，也可以用 <code>--provider cloud</code> 切換。</li>
         <li><strong>錯誤處理</strong>：Ollama 沒開、模型沒下載、檔案不存在、雲端金鑰沒設定時，都會顯示中文說明與解決方法。</li>
-        <li>使用 <strong>uv</strong> 管理 Python 環境與套件；用 <strong>GitHub Actions</strong> 自動部署本頁面到 GitHub Pages。</li>
+        <li>使用 <strong>uv</strong> 管理 Python 環境與套件；用 <strong>GitHub Actions</strong> 自動部署本網站到 GitHub Pages。</li>
       </ul>
       <p class="note">samples/ 資料夾中的三篇新聞（臺灣黑熊、河口濕地、珊瑚白化）都是自行撰寫的虛構範例文章，僅供測試。</p>
     </section>
 
-    <section id="demo">
-      <h2>線上試玩</h2>
-      <p>這個區塊會讓<strong>你的瀏覽器直接連到你自己電腦上的 Ollama</strong>（預設 <code>http://localhost:11434</code>）來產生摘要。新聞文字只會送到你自己的電腦，不會上傳到其他地方，也不需要任何 API 金鑰。</p>
-      <p class="hint">💡 第一次使用？請先展開下方的 <a href="#setup" id="open-setup">「連線設定（老師第一次使用請看）」</a>，完成 Ollama 設定後再按「檢查連線」。</p>
-
-      <div class="demo-row">
-        <label for="ollama-url">Ollama 位址</label>
-        <input id="ollama-url" type="text" value="http://localhost:11434">
-        <button id="check" type="button">檢查連線</button>
+    <section class="cards">
+      <h2>網站導覽</h2>
+      <div class="card-grid">
+        <a class="card" href="demo.html"><strong>🧪 線上試玩</strong><span>在瀏覽器連到自己電腦的 Ollama，直接產生串流摘要或 JSON 結構化輸出。</span></a>
+        <a class="card" href="run.html"><strong>🛠️ 怎麼執行</strong><span>安裝 uv、Ollama，下載模型並用命令列執行程式的步驟。</span></a>
+        <a class="card" href="results.html"><strong>📊 執行結果</strong><span>qwen2.5:14b 與小模型的實際執行輸出與比較。</span></a>
+        <a class="card" href="ai.html"><strong>🤖 AI 使用說明</strong><span>本作業使用 Grok Bot（對話式 AI 程式助手）的範圍與方式。</span></a>
       </div>
-      <div class="demo-row">
-        <label for="model">模型</label>
-        <input id="model" type="text" list="model-options" value="qwen2.5:14b">
-        <datalist id="model-options">
-          <option value="qwen2.5:14b">
-          <option value="llama3.2:1b">
-          <option value="qwen2.5:1.5b">
-        </datalist>
-        <span class="note">可直接輸入其他已下載的模型名稱</span>
-      </div>
-      <p id="models" class="note"></p>
-
-      <div class="demo-row">
-        <span>載入範例：</span>
-        <button type="button" data-sample="01_black_bear.txt">臺灣黑熊</button>
-        <button type="button" data-sample="02_wetland.txt">河口濕地</button>
-        <button type="button" data-sample="03_coral_reef.txt">珊瑚白化</button>
-      </div>
-      <textarea id="news" rows="9" placeholder="在這裡貼上生態保育新聞的文字，或點上面的範例按鈕…"></textarea>
-
-      <div class="demo-row">
-        <label><input id="use-json" type="checkbox"> 結構化輸出（JSON：title、key_points、topics、sentiment）</label>
-      </div>
-      <div class="demo-row">
-        <button id="run" type="button" class="primary">產生摘要</button>
-        <button id="stop" type="button" disabled>停止</button>
-      </div>
-      <pre id="status" class="status" aria-live="polite"></pre>
-      <pre id="output" class="output" aria-live="polite"></pre>
-
-      <details id="setup">
-        <summary><strong>連線設定（老師第一次使用請看）</strong></summary>
-        <ol>
-          <li>安裝 Ollama：到 <a href="https://ollama.com/download">ollama.com/download</a> 下載安裝。</li>
-          <li>下載模型（在終端機執行）：<pre><code>ollama pull qwen2.5:14b
-# 沒有獨立顯示卡或電腦較輕，可改用小模型，並在上面「模型」欄改成同名：
-ollama pull llama3.2:1b</code></pre></li>
-          <li>允許這個網頁連到 Ollama：Ollama 預設會拒絕其他網站的連線，要用環境變數 <code>OLLAMA_ORIGINS</code> 加入本網頁的來源（目前是 <code id="origin"></code>）。
-            <p><strong>Windows（PowerShell）：</strong></p>
-            <pre><code>setx OLLAMA_ORIGINS "https://&lt;username&gt;.github.io"</code></pre>
-            <p>把 <code>&lt;username&gt;</code> 換成 GitHub 帳號名稱。執行後，從右下角系統匣（工作列）的 Ollama 圖示按右鍵選「Quit Ollama」<strong>完全結束</strong>，再重新開啟 Ollama，設定才會生效。</p>
-            <p><strong>macOS（Ollama App）：</strong></p>
-            <pre><code>launchctl setenv OLLAMA_ORIGINS "https://&lt;username&gt;.github.io"</code></pre>
-            <p>然後從選單列結束 Ollama 再重新開啟。</p>
-            <p><strong>Linux（或直接在終端機執行 ollama serve）：</strong></p>
-            <pre><code>OLLAMA_ORIGINS="https://&lt;username&gt;.github.io" ollama serve
-# 若是 systemd 服務：sudo systemctl edit ollama，加入
-# [Service]
-# Environment="OLLAMA_ORIGINS=https://&lt;username&gt;.github.io"
-# 再執行 sudo systemctl restart ollama</code></pre>
-            <p class="note">比較簡單但較不安全的做法是把值設成 <code>*</code>（允許任何網站連到你的 Ollama），測試完建議改回來或刪除這個設定。</p>
-          </li>
-          <li>回到這裡按「檢查連線」，看到已安裝的模型就可以按「產生摘要」。</li>
-        </ol>
-        <p class="note">瀏覽器相容性：本頁是 HTTPS，連到 <code>http://localhost</code> 時，Chrome、Edge、Firefox 會把 localhost 視為安全來源而允許連線；Safari 可能會封鎖，建議改用其他瀏覽器。較新版的 Chrome／Edge 第一次連線時可能會跳出「存取區域網路上的裝置」之類的權限詢問，請選擇「允許」。</p>
-      </details>
-    </section>
-
-    <section id="how">
-      <h2>怎麼執行</h2>
-      <h3>1. 安裝 uv</h3>
-      <pre class="wrap"><code># macOS / Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
-# Windows（PowerShell）
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
-      <h3>2. 安裝 Ollama 並下載模型</h3>
-      <p>到 <a href="https://ollama.com/download">ollama.com/download</a> 下載安裝，然後：</p>
-      <pre><code>ollama pull qwen2.5:14b</code></pre>
-      <p class="note">預設模型 <code>qwen2.5:14b</code> 約 9GB，執行時大約佔用 9GB VRAM（16GB 顯示卡用掉一半多一點，不會吃滿）。較輕的電腦或沒有獨立顯示卡，可改用小模型：<code>ollama pull llama3.2:1b</code>（或 <code>qwen2.5:1.5b</code>），執行時加上 <code>--model llama3.2:1b</code>（或 <code>--model qwen2.5:1.5b</code>）。</p>
-      <h3>3. 安裝套件並執行</h3>
-      <pre><code>uv sync
-
-# 串流摘要（預設 qwen2.5:14b）
-uv run eco-news-summary samples/01_black_bear.txt
-
-# 結構化 JSON 輸出
-uv run eco-news-summary samples/02_wetland.txt --json
-
-# 改用小模型
-uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b</code></pre>
-      <h3>4.（選用）使用雲端模型</h3>
-      <pre><code># 複製範本後，在 .env 填入 CLOUD_API_KEY 等設定
-cp .env.example .env
-uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
-      <p class="note"><code>.env</code> 已列在 <code>.gitignore</code>，不會被提交到 Git。</p>
-    </section>
-
-    <section id="result">
-      <h2>執行結果</h2>
-      <p class="note">以下都是實際執行的輸出（未經修改），每段都標明使用的模型。</p>
-      <h3>⭐ 串流摘要：01_black_bear.txt（模型：qwen2.5:14b，預設模型）</h3>
-      <p class="note">在學生自己的電腦上執行（NVIDIA RTX 5060 Ti 16GB）。</p>
-      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
-[模型] ollama / qwen2.5:14b
-- 臺灣黑熊母子在山區溪谷覓食的畫面被紅外線相機記錄到。
-- 黑熊活動範圍今年擴大，更靠近登山步道，可能與青剛櫟結果量增加有關。
-- 管理處提醒登山客勿在山區留下廚餘，並應遠離黑熊。
-- 保育團體指出獵具誤傷是臺灣黑熊的主要威脅，呼籲民眾通報不明獸鋏。</code></pre>
-      <h3>對照：小模型的執行結果</h3>
-      <p class="note">以下在沒有 GPU 的 Linux 測試機（僅 CPU）上執行，使用小模型 <code>llama3.2:1b</code> 與 <code>qwen2.5:1.5b</code>（每篇約 2～4 秒），執行日期 2026-10-23，可和上面的預設模型比較。</p>
-      <h3>串流摘要：01_black_bear.txt（模型：llama3.2:1b）</h3>
-      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model llama3.2:1b
-[模型] ollama / llama3.2:1b
-- Taiwanese 黑熊出現地點比前一年更靠近登山步道
-- 黑熊出現的地點可能與今年秋季青剛櫟結果量較多有關
-- 黑熊出現的地點可能導致登山客不安全
-- 黑熊族群數量仍然稀少
--獵具誤傷是黑熊主要威脅</code></pre>
-      <h3>串流摘要：02_wetland.txt（模型：llama3.2:1b）</h3>
-      <pre><code>$ uv run eco-news-summary samples/02_wetland.txt --model llama3.2:1b
-[模型] ollama / llama3.2:1b
--河口濕地冬候鳥數量回升
--志工持續清除外來種植物
--黑面琵鷺數量增加
--過去兩年清除外來植物影響了水鳥休息空間</code></pre>
-      <h3>串流摘要：03_coral_reef.txt（模型：llama3.2:1b）</h3>
-      <pre><code>$ uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b
-[模型] ollama / llama3.2:1b
-- 今年夏天東部海域水溫高於往年平均
-- 部分淺海珊瑚出現白化現象
-- 白化是珊瑚在高溫壓力下失去體內共生藻的結果
-- 高溫持續影響珊瑚可能大量死亡
-- 遊客浮潛時不要踩踏或觸摸珊瑚</code></pre>
-      <h3>結構化輸出（--json）：02_wetland.txt（模型：llama3.2:1b）</h3>
-      <pre><code>$ uv run eco-news-summary samples/02_wetland.txt --model llama3.2:1b --json
-[模型] ollama / llama3.2:1b
-{
-  &quot;title&quot;: &quot;河口濕地冬候鳥數量回升&quot;,
-  &quot;key_points&quot;: [
-    &quot;黑面琵鷺數量增加&quot;,
-    &quot;鳥類數量增加&quot;,
-    &quot;鳥類數量比去年多了 20 隻&quot;
-  ],
-  &quot;topics&quot;: [
-    &quot;河口濕地&quot;,
-    &quot;候鳥&quot;,
-    &quot;鳥類&quot;,
-    &quot;黑面琵鷺&quot;,
-    &quot;鳥類數量&quot;,
-    &quot;鳥類數量增加&quot;
-  ],
-  &quot;sentiment&quot;: &quot;positive&quot;
-}</code></pre>
-      <h3>觀察</h3>
-      <ul>
-        <li>1B 小模型速度快，但偶爾會夾雜英文（例如「Taiwanese」）、格式不一致（「-」後少了空格），或把數字套錯對象（原文「多了 20 隻」指的是黑面琵鷺，不是全部鳥類）。</li>
-        <li>濕地那篇的第 4 點也和原文意思不同：原文說清除外來植物讓覓食空間<strong>變大</strong>，影響休息的是道路工程。</li>
-        <li>換成中文能力較好的 <code>qwen2.5:1.5b</code>，同一篇黑熊新聞的摘要明顯比較完整（模型：qwen2.5:1.5b）：</li>
-      </ul>
-      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model qwen2.5:1.5b
-[模型] ollama / qwen2.5:1.5b
-- 研究團隊在山區紅外線相機中拍到臺灣黑熊母子活動，是近年來少見的畫面。
-- 黑熊出現的地點比前一年更靠近登山步道，可能與秋季青剛櫟結果量較多有關。
-- 管理處提醒登山客不要在山屋或步道留下廚餘，遇到黑熊時應保持距離、慢慢後退，切勿餵食或追逐拍照。
-- 保育團體呼籲民眾發現不明獸鋏時立即通報，以保護臺灣黑熊族群免受獵具誤傷。</code></pre>
-      <h3>錯誤處理：Ollama 沒有啟動時</h3>
-      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
-[模型] ollama / qwen2.5:14b
-
-錯誤：連不到 Ollama（http://localhost:11434/v1/）。
-請確認：
-  1. 已安裝 Ollama：https://ollama.com/download
-  2. Ollama 正在執行：另開終端機執行 `ollama serve`（或開啟 Ollama App）
-  3. 已下載模型：`ollama pull qwen2.5:14b`</code></pre>
-    </section>
-
-    <section id="ai">
-      <h2>AI 使用說明</h2>
-      <p>本作業在開發過程中使用了 <strong>Grok Bot（對話式 AI 程式助手）</strong>協助，使用範圍如下：</p>
-      <ul>
-        <li>產生專案初版架構：<code>pyproject.toml</code>、<code>src/eco_news_summary/cli.py</code>（串流摘要、<code>--json</code> 結構化輸出、錯誤處理）。</li>
-        <li>撰寫 GitHub Actions 工作流程 <code>.github/workflows/pages.yml</code>。</li>
-        <li>撰寫三篇虛構的範例新聞（<code>samples/</code>）。</li>
-        <li>撰寫 README 與本頁面（HTML/CSS）的初稿。</li>
-        <li>撰寫「線上試玩」區塊與 <code>docs/app.js</code>（瀏覽器直接呼叫本機 Ollama 的串流與 JSON 結構化輸出），並用無頭 Chrome 搭配小模型 <code>llama3.2:1b</code> 測試。</li>
-      </ul>
-      <p>「執行結果」區塊中的輸出是程式實際呼叫本地模型所產生的，沒有手動編修。程式本身執行時呼叫的 LLM 是 Ollama 上的開源模型（預設 <code>qwen2.5:14b</code>）。</p>
     </section>
   </main>
-  <script src="app.js"></script>
   <footer>生態新聞摘要器｜期中作業｜範例文章皆為虛構內容</footer>
 </body>
 </html>

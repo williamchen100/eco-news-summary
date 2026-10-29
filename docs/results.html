@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>執行結果｜生態新聞摘要器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🌿 生態新聞摘要器</h1>
+    <p>用本地 LLM（Ollama）以串流方式摘要生態保育新聞｜期中作業</p>
+  </header>
+  <nav>
+    <a href="index.html">首頁</a>
+    <a href="demo.html">線上試玩</a>
+    <a href="run.html">怎麼執行</a>
+    <a href="results.html" class="active" aria-current="page">執行結果</a>
+    <a href="ai.html">AI 使用說明</a>
+  </nav>
+  <main>
+    <section id="result">
+      <h2>執行結果</h2>
+      <p class="note">以下都是實際執行的輸出（未經修改），每段都標明使用的模型。</p>
+      <h3>⭐ 串流摘要：01_black_bear.txt（模型：qwen2.5:14b，預設模型）</h3>
+      <p class="note">在學生自己的電腦上執行（NVIDIA RTX 5060 Ti 16GB）。</p>
+      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
+[模型] ollama / qwen2.5:14b
+- 臺灣黑熊母子在山區溪谷覓食的畫面被紅外線相機記錄到。
+- 黑熊活動範圍今年擴大，更靠近登山步道，可能與青剛櫟結果量增加有關。
+- 管理處提醒登山客勿在山區留下廚餘，並應遠離黑熊。
+- 保育團體指出獵具誤傷是臺灣黑熊的主要威脅，呼籲民眾通報不明獸鋏。</code></pre>
+      <h3>對照：小模型的執行結果</h3>
+      <p class="note">以下在沒有 GPU 的 Linux 測試機（僅 CPU）上執行，使用小模型 <code>llama3.2:1b</code> 與 <code>qwen2.5:1.5b</code>（每篇約 2～4 秒），執行日期 2026-10-23，可和上面的預設模型比較。</p>
+      <h3>串流摘要：01_black_bear.txt（模型：llama3.2:1b）</h3>
+      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model llama3.2:1b
+[模型] ollama / llama3.2:1b
+- Taiwanese 黑熊出現地點比前一年更靠近登山步道
+- 黑熊出現的地點可能與今年秋季青剛櫟結果量較多有關
+- 黑熊出現的地點可能導致登山客不安全
+- 黑熊族群數量仍然稀少
+-獵具誤傷是黑熊主要威脅</code></pre>
+      <h3>串流摘要：02_wetland.txt（模型：llama3.2:1b）</h3>
+      <pre><code>$ uv run eco-news-summary samples/02_wetland.txt --model llama3.2:1b
+[模型] ollama / llama3.2:1b
+-河口濕地冬候鳥數量回升
+-志工持續清除外來種植物
+-黑面琵鷺數量增加
+-過去兩年清除外來植物影響了水鳥休息空間</code></pre>
+      <h3>串流摘要：03_coral_reef.txt（模型：llama3.2:1b）</h3>
+      <pre><code>$ uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b
+[模型] ollama / llama3.2:1b
+- 今年夏天東部海域水溫高於往年平均
+- 部分淺海珊瑚出現白化現象
+- 白化是珊瑚在高溫壓力下失去體內共生藻的結果
+- 高溫持續影響珊瑚可能大量死亡
+- 遊客浮潛時不要踩踏或觸摸珊瑚</code></pre>
+      <h3>結構化輸出（--json）：02_wetland.txt（模型：llama3.2:1b）</h3>
+      <pre><code>$ uv run eco-news-summary samples/02_wetland.txt --model llama3.2:1b --json
+[模型] ollama / llama3.2:1b
+{
+  &quot;title&quot;: &quot;河口濕地冬候鳥數量回升&quot;,
+  &quot;key_points&quot;: [
+    &quot;黑面琵鷺數量增加&quot;,
+    &quot;鳥類數量增加&quot;,
+    &quot;鳥類數量比去年多了 20 隻&quot;
+  ],
+  &quot;topics&quot;: [
+    &quot;河口濕地&quot;,
+    &quot;候鳥&quot;,
+    &quot;鳥類&quot;,
+    &quot;黑面琵鷺&quot;,
+    &quot;鳥類數量&quot;,
+    &quot;鳥類數量增加&quot;
+  ],
+  &quot;sentiment&quot;: &quot;positive&quot;
+}</code></pre>
+      <h3>觀察</h3>
+      <ul>
+        <li>1B 小模型速度快，但偶爾會夾雜英文（例如「Taiwanese」）、格式不一致（「-」後少了空格），或把數字套錯對象（原文「多了 20 隻」指的是黑面琵鷺，不是全部鳥類）。</li>
+        <li>濕地那篇的第 4 點也和原文意思不同：原文說清除外來植物讓覓食空間<strong>變大</strong>，影響休息的是道路工程。</li>
+        <li>換成中文能力較好的 <code>qwen2.5:1.5b</code>，同一篇黑熊新聞的摘要明顯比較完整（模型：qwen2.5:1.5b）：</li>
+      </ul>
+      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model qwen2.5:1.5b
+[模型] ollama / qwen2.5:1.5b
+- 研究團隊在山區紅外線相機中拍到臺灣黑熊母子活動，是近年來少見的畫面。
+- 黑熊出現的地點比前一年更靠近登山步道，可能與秋季青剛櫟結果量較多有關。
+- 管理處提醒登山客不要在山屋或步道留下廚餘，遇到黑熊時應保持距離、慢慢後退，切勿餵食或追逐拍照。
+- 保育團體呼籲民眾發現不明獸鋏時立即通報，以保護臺灣黑熊族群免受獵具誤傷。</code></pre>
+      <h3>錯誤處理：Ollama 沒有啟動時</h3>
+      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
+[模型] ollama / qwen2.5:14b
+
+錯誤：連不到 Ollama（http://localhost:11434/v1/）。
+請確認：
+  1. 已安裝 Ollama：https://ollama.com/download
+  2. Ollama 正在執行：另開終端機執行 `ollama serve`（或開啟 Ollama App）
+  3. 已下載模型：`ollama pull qwen2.5:14b`</code></pre>
+    </section>
+  </main>
+  <footer>生態新聞摘要器｜期中作業｜範例文章皆為虛構內容</footer>
+</body>
+</html>

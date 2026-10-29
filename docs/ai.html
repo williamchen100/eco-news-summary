@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 使用說明｜生態新聞摘要器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🌿 生態新聞摘要器</h1>
+    <p>用本地 LLM（Ollama）以串流方式摘要生態保育新聞｜期中作業</p>
+  </header>
+  <nav>
+    <a href="index.html">首頁</a>
+    <a href="demo.html">線上試玩</a>
+    <a href="run.html">怎麼執行</a>
+    <a href="results.html">執行結果</a>
+    <a href="ai.html" class="active" aria-current="page">AI 使用說明</a>
+  </nav>
+  <main>
+    <section id="ai">
+      <h2>AI 使用說明</h2>
+      <p>本作業在開發過程中使用了 <strong>Grok Bot（對話式 AI 程式助手）</strong>協助，使用範圍如下：</p>
+      <ul>
+        <li>產生專案初版架構：<code>pyproject.toml</code>、<code>src/eco_news_summary/cli.py</code>（串流摘要、<code>--json</code> 結構化輸出、錯誤處理）。</li>
+        <li>撰寫 GitHub Actions 工作流程 <code>.github/workflows/pages.yml</code>。</li>
+        <li>撰寫三篇虛構的範例新聞（<code>samples/</code>）。</li>
+        <li>撰寫 README 與本網站（HTML/CSS）的初稿。</li>
+        <li>撰寫「線上試玩」頁面與 <code>docs/app.js</code>（瀏覽器直接呼叫本機 Ollama 的串流與 JSON 結構化輸出），並用無頭 Chrome 搭配小模型 <code>llama3.2:1b</code> 測試。</li>
+      </ul>
+      <p><a href="results.html">「執行結果」</a>頁面中的輸出是程式實際呼叫本地模型所產生的，沒有手動編修。程式本身執行時呼叫的 LLM 是 Ollama 上的開源模型（預設 <code>qwen2.5:14b</code>）。</p>
+    </section>
+  </main>
+  <footer>生態新聞摘要器｜期中作業｜範例文章皆為虛構內容</footer>
+</body>
+</html>
