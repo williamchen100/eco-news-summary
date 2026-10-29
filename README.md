@@ -119,14 +119,14 @@ Ollama 預設會拒絕其他網站的連線，所以要用 `OLLAMA_ORIGINS` 允�
 
 ```powershell
 # Windows（PowerShell）：設定後從系統匣「Quit Ollama」完全結束，再重新開啟
-setx OLLAMA_ORIGINS "https://<username>.github.io"
+setx OLLAMA_ORIGINS "https://williamchen100.github.io"
 ```
 
 ```bash
 # macOS（Ollama App）：設定後結束 Ollama 再重新開啟
-launchctl setenv OLLAMA_ORIGINS "https://<username>.github.io"
+launchctl setenv OLLAMA_ORIGINS "https://williamchen100.github.io"
 # Linux（手動執行）
-OLLAMA_ORIGINS="https://<username>.github.io" ollama serve
+OLLAMA_ORIGINS="https://williamchen100.github.io" ollama serve
 ```
 
 - 也可以設成 `*`（允許任何網站），比較簡單但較不安全。
