@@ -55,7 +55,8 @@ textarea { width: 100%; padding: .6rem; border: 1px solid #c8d3cc; border-radius
 button { padding: .4rem .9rem; border: 1px solid var(--green); background: #fff; color: var(--green); border-radius: 6px; font: inherit; cursor: pointer; }
 button.primary { background: var(--green); color: #fff; }
 button:disabled { opacity: .5; cursor: not-allowed; }
-.status { background: transparent; color: var(--muted); padding: 0; white-space: pre-wrap; min-height: 1.5em; }
+.status { background: transparent; color: var(--muted); padding: 0; white-space: pre-wrap; min-height: 1.5em; font-family: inherit; font-size: 1rem; line-height: 1.7; }
+.hint { background: #eef5f0; border-left: 4px solid var(--green); padding: .5rem .8rem; border-radius: 4px; }
 .status.ok { color: #2f6b4f; }
 .status.warn { color: #9a6700; }
 .status.error { color: #b42318; }
@@ -63,3 +64,4 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 details { margin-top: 1rem; }
 pre code { background: none; padding: 0; }
 .output:empty { display: none; }
+pre.wrap { white-space: pre-wrap; overflow-wrap: anywhere; }

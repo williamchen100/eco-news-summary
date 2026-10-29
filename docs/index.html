@@ -34,7 +34,8 @@
 
     <section id="demo">
       <h2>線上試玩</h2>
-      <p>這個區塊會讓<strong>你的瀏覽器直接連到你自己電腦上的 Ollama</strong>（預設 <code>http://localhost:11434</code>）來產生摘要。新聞文字只會送到你自己的電腦，不會上傳到其他地方，也不需要任何 API 金鑰。第一次使用前，請先完成下面的「連線設定」。</p>
+      <p>這個區塊會讓<strong>你的瀏覽器直接連到你自己電腦上的 Ollama</strong>（預設 <code>http://localhost:11434</code>）來產生摘要。新聞文字只會送到你自己的電腦，不會上傳到其他地方，也不需要任何 API 金鑰。</p>
+      <p class="hint">💡 第一次使用？請先展開下方的 <a href="#setup" id="open-setup">「連線設定（老師第一次使用請看）」</a>，完成 Ollama 設定後再按「檢查連線」。</p>
 
       <div class="demo-row">
         <label for="ollama-url">Ollama 位址</label>
@@ -71,7 +72,7 @@
       <pre id="status" class="status" aria-live="polite"></pre>
       <pre id="output" class="output" aria-live="polite"></pre>
 
-      <details open>
+      <details id="setup">
         <summary><strong>連線設定（老師第一次使用請看）</strong></summary>
         <ol>
           <li>安裝 Ollama：到 <a href="https://ollama.com/download">ollama.com/download</a> 下載安裝。</li>
@@ -102,7 +103,7 @@ ollama pull llama3.2:1b</code></pre></li>
     <section id="how">
       <h2>怎麼執行</h2>
       <h3>1. 安裝 uv</h3>
-      <pre><code># macOS / Linux
+      <pre class="wrap"><code># macOS / Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # Windows（PowerShell）
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code></pre>
@@ -112,11 +113,18 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
       <p class="note">預設模型 <code>qwen2.5:14b</code> 約 9GB，執行時大約佔用 9GB VRAM（16GB 顯示卡用掉一半多一點，不會吃滿）。較輕的電腦或沒有獨立顯示卡，可改用小模型：<code>ollama pull llama3.2:1b</code>（或 <code>qwen2.5:1.5b</code>），執行時加上 <code>--model llama3.2:1b</code>（或 <code>--model qwen2.5:1.5b</code>）。</p>
       <h3>3. 安裝套件並執行</h3>
       <pre><code>uv sync
-uv run eco-news-summary samples/01_black_bear.txt              # 串流摘要（預設 qwen2.5:14b）
-uv run eco-news-summary samples/02_wetland.txt --json          # 結構化 JSON 輸出
-uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b   # 改用小模型</code></pre>
+
+# 串流摘要（預設 qwen2.5:14b）
+uv run eco-news-summary samples/01_black_bear.txt
+
+# 結構化 JSON 輸出
+uv run eco-news-summary samples/02_wetland.txt --json
+
+# 改用小模型
+uv run eco-news-summary samples/03_coral_reef.txt --model llama3.2:1b</code></pre>
       <h3>4.（選用）使用雲端模型</h3>
-      <pre><code>cp .env.example .env    # 在 .env 填入 CLOUD_API_KEY 等設定
+      <pre><code># 複製範本後，在 .env 填入 CLOUD_API_KEY 等設定
+cp .env.example .env
 uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
       <p class="note"><code>.env</code> 已列在 <code>.gitignore</code>，不會被提交到 Git。</p>
     </section>

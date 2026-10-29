@@ -176,6 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("check").addEventListener("click", checkConnection);
   $("run").addEventListener("click", summarize);
   $("stop").addEventListener("click", () => controller?.abort());
+  $("open-setup").addEventListener("click", () => { $("setup").open = true; });
   document.querySelectorAll("[data-sample]").forEach((btn) =>
     btn.addEventListener("click", () => loadSample(btn.dataset.sample))
   );
