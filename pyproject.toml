@@ -3,7 +3,7 @@ name = "eco-news-summary"
 version = "0.1.0"
 description = "用本地 Ollama 模型以串流方式摘要生態保育新聞（期中作業）"
 authors = [
-    { name = "student", email = "student@example.com" }
+    { name = "williamchen100", email = "203423661+williamchen100@users.noreply.github.com" }
 ]
 requires-python = ">=3.12"
 dependencies = [
