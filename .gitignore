@@ -1,0 +1,17 @@
+# 機密設定：絕對不要提交
+.env
+.env.*
+!.env.example
+
+# Python / uv
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+
+# 編輯器 / 系統
+.vscode/
+.idea/
+.DS_Store
