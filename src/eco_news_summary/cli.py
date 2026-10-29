@@ -3,19 +3,39 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
+from typing import Literal
 
 import openai
 from dotenv import load_dotenv
 from openai import OpenAI
+from pydantic import BaseModel, Field, ValidationError
 
 SYSTEM_PROMPT = (
     "你是一位生態保育新聞編輯。請只根據使用者提供的新聞內容，"
     "用台灣慣用的繁體中文（zh-Hant-TW）整理 3 到 5 個重點，"
     "每個重點一行、以「- 」開頭，不要加入原文沒有的資訊。"
 )
+
+JSON_PROMPT = (
+    "你是一位生態保育新聞編輯。請只根據使用者提供的新聞內容，"
+    "用台灣慣用的繁體中文（zh-Hant-TW）輸出 JSON，欄位：title（標題）、"
+    "key_points（3 到 5 個重點）、topics（提到的物種或議題）、"
+    "sentiment（只能是 positive、neutral、negative 其中之一）。"
+)
+
+
+class NewsSummary(BaseModel):
+    """結構化輸出的格式（JSON Schema 由 Pydantic 自動產生）。"""
+
+    title: str = Field(description="新聞標題（繁體中文）")
+    key_points: list[str] = Field(description="3 到 5 個重點")
+    topics: list[str] = Field(description="提到的物種或保育議題")
+    sentiment: Literal["positive", "neutral", "negative"] = Field(description="整體語氣")
+
 
 PLACEHOLDER_KEYS = {"", "your-api-key-here"}
 
@@ -62,6 +82,23 @@ def stream_summary(client: OpenAI, model: str, text: str) -> str:
     return "".join(parts)
 
 
+def structured_summary(client: OpenAI, model: str, text: str) -> NewsSummary:
+    """結構化輸出：要求模型依 JSON Schema 回傳，再用 Pydantic 驗證。"""
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": JSON_PROMPT},
+            {"role": "user", "content": f"新聞內容：\n{text}"},
+        ],
+        temperature=0,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "news_summary", "schema": NewsSummary.model_json_schema()},
+        },
+    )
+    return NewsSummary.model_validate_json(response.choices[0].message.content or "")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="eco-news-summary",
@@ -75,6 +112,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="ollama＝本地模型（預設）；cloud＝.env 中設定的 OpenAI 相容雲端模型",
     )
     parser.add_argument("--model", help="覆寫模型名稱，例如 llama3.2:1b")
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="改用結構化輸出（JSON：title、key_points、topics、sentiment），不串流",
+    )
     return parser
 
 
@@ -94,7 +136,13 @@ def main() -> None:
 
     print(f"[模型] {args.provider} / {model}", file=sys.stderr)
     try:
-        stream_summary(client, model, text)
+        if args.json:
+            result = structured_summary(client, model, text)
+            print(json.dumps(result.model_dump(), ensure_ascii=False, indent=2))
+        else:
+            stream_summary(client, model, text)
+    except ValidationError:
+        sys.exit("\n錯誤：模型回傳的 JSON 格式不正確，請再試一次或換一個較大的模型。")
     except openai.APIConnectionError:
         if args.provider == "ollama":
             sys.exit(
