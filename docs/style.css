@@ -45,10 +45,4 @@ pre {
 code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; }
 p code, li code { background: #eef3ef; padding: .1rem .35rem; border-radius: 4px; }
 .note { color: var(--muted); font-size: .92rem; }
-.todo {
-  border: 2px dashed #c98a00;
-  background: #fff8e6;
-  padding: .8rem 1rem;
-  border-radius: 8px;
-}
 footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 2rem 1rem; }

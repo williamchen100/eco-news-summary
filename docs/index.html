@@ -55,12 +55,17 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
 
     <section id="result">
       <h2>執行結果</h2>
-      <p class="note">以下是實際執行的輸出（未經修改），每段都標明使用的模型。測試環境：Linux（僅 CPU、無 GPU）、Ollama，執行日期 2026-10-23。因為測試機沒有 GPU，這裡使用的是小模型 <code>llama3.2:1b</code> 與 <code>qwen2.5:1.5b</code>（每篇約 2～4 秒），<strong>不是</strong>預設的 <code>qwen2.5:14b</code>。</p>
-      <div class="todo">
-        <p><strong>✏️【待學生補上】預設模型 qwen2.5:14b 的執行結果：</strong>請在自己的電腦（有 GPU）執行下面指令，把真實輸出貼在這裡：</p>
-        <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
-（請貼上 qwen2.5:14b 的實際輸出）</code></pre>
-      </div>
+      <p class="note">以下都是實際執行的輸出（未經修改），每段都標明使用的模型。</p>
+      <h3>⭐ 串流摘要：01_black_bear.txt（模型：qwen2.5:14b，預設模型）</h3>
+      <p class="note">在學生自己的電腦上執行（NVIDIA RTX 5060 Ti 16GB）。</p>
+      <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt
+[模型] ollama / qwen2.5:14b
+- 臺灣黑熊母子在山區溪谷覓食的畫面被紅外線相機記錄到。
+- 黑熊活動範圍今年擴大，更靠近登山步道，可能與青剛櫟結果量增加有關。
+- 管理處提醒登山客勿在山區留下廚餘，並應遠離黑熊。
+- 保育團體指出獵具誤傷是臺灣黑熊的主要威脅，呼籲民眾通報不明獸鋏。</code></pre>
+      <h3>對照：小模型的執行結果</h3>
+      <p class="note">以下在沒有 GPU 的 Linux 測試機（僅 CPU）上執行，使用小模型 <code>llama3.2:1b</code> 與 <code>qwen2.5:1.5b</code>（每篇約 2～4 秒），執行日期 2026-10-23，可和上面的預設模型比較。</p>
       <h3>串流摘要：01_black_bear.txt（模型：llama3.2:1b）</h3>
       <pre><code>$ uv run eco-news-summary samples/01_black_bear.txt --model llama3.2:1b
 [模型] ollama / llama3.2:1b
@@ -129,7 +134,7 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
 
     <section id="ai">
       <h2>AI 使用說明</h2>
-      <p>本作業在開發過程中使用了 <strong>AI 助理（對話式 AI 程式助手）</strong>協助，使用範圍如下：</p>
+      <p>本作業在開發過程中使用了 <strong>Grok Bot（對話式 AI 程式助手）</strong>協助，使用範圍如下：</p>
       <ul>
         <li>產生專案初版架構：<code>pyproject.toml</code>、<code>src/eco_news_summary/cli.py</code>（串流摘要、<code>--json</code> 結構化輸出、錯誤處理）。</li>
         <li>撰寫 GitHub Actions 工作流程 <code>.github/workflows/pages.yml</code>。</li>
@@ -137,15 +142,6 @@ uv run eco-news-summary samples/01_black_bear.txt --provider cloud</code></pre>
         <li>撰寫 README 與本頁面（HTML/CSS）的初稿。</li>
       </ul>
       <p>「執行結果」區塊中的輸出是程式實際呼叫本地模型所產生的，沒有手動編修。程式本身執行時呼叫的 LLM 是 Ollama 上的開源模型（預設 <code>qwen2.5:14b</code>）。</p>
-      <div class="todo">
-        <p><strong>✏️【待學生填寫】我自己修改與驗證的部分：</strong></p>
-        <ul>
-          <li>我讀懂並修改了哪些程式碼：（請填寫）</li>
-          <li>我自己在電腦上實際執行、確認過的步驟與結果：（請填寫）</li>
-          <li>我發現 AI 產生的內容有哪些錯誤或不足，以及如何修正：（請填寫）</li>
-          <li>我從這次作業學到的事：（請填寫）</li>
-        </ul>
-      </div>
     </section>
   </main>
   <footer>生態新聞摘要器｜期中作業｜範例文章皆為虛構內容</footer>
