@@ -46,3 +46,20 @@ code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; }
 p code, li code { background: #eef3ef; padding: .1rem .35rem; border-radius: 4px; }
 .note { color: var(--muted); font-size: .92rem; }
 footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 2rem 1rem; }
+
+/* 線上試玩 */
+.demo-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: .6rem 0; }
+.demo-row label { font-weight: 600; }
+.demo-row input[type="text"] { flex: 1; min-width: 12rem; padding: .4rem .6rem; border: 1px solid #c8d3cc; border-radius: 6px; font: inherit; }
+textarea { width: 100%; padding: .6rem; border: 1px solid #c8d3cc; border-radius: 8px; font: inherit; line-height: 1.6; }
+button { padding: .4rem .9rem; border: 1px solid var(--green); background: #fff; color: var(--green); border-radius: 6px; font: inherit; cursor: pointer; }
+button.primary { background: var(--green); color: #fff; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.status { background: transparent; color: var(--muted); padding: 0; white-space: pre-wrap; min-height: 1.5em; }
+.status.ok { color: #2f6b4f; }
+.status.warn { color: #9a6700; }
+.status.error { color: #b42318; }
+.output { white-space: pre-wrap; min-height: 4em; }
+details { margin-top: 1rem; }
+pre code { background: none; padding: 0; }
+.output:empty { display: none; }

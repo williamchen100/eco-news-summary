@@ -21,7 +21,9 @@ eco-news-summary/
 ├── .github/workflows/pages.yml   # GitHub Actions：把 docs/ 部署到 GitHub Pages
 ├── docs/                         # GitHub Pages 靜態網站
 │   ├── index.html
-│   └── style.css
+│   ├── app.js                    # 線上試玩：瀏覽器直接呼叫本機 Ollama
+│   ├── style.css
+│   └── samples/                  # 範例文章副本（給網頁載入）
 ├── samples/                      # 三篇自行撰寫的「虛構」範例新聞
 │   ├── 01_black_bear.txt
 │   ├── 02_wetland.txt
@@ -103,6 +105,28 @@ cp .env.example .env
 | `CLOUD_MODEL` | （無） | 雲端模型名稱，例如 `gpt-4o-mini` |
 
 > ⚠️ 金鑰只能放在 `.env`。`.env` 已列在 `.gitignore`，**不要**把真實金鑰寫進程式碼或 `.env.example`。
+
+## 網頁線上試玩（連到自己電腦的 Ollama）
+
+GitHub Pages 網站上的「線上試玩」區塊可以直接在瀏覽器裡產生摘要（串流顯示，也可勾選 JSON 結構化輸出）。網頁是用純 JavaScript（`docs/app.js`）直接呼叫**使用者自己電腦上的** Ollama（`http://localhost:11434` 的 `/api/tags`、`/api/chat`），不需要任何金鑰，新聞文字也不會送到別的伺服器。範例文章的副本放在 `docs/samples/`，供網頁載入。
+
+Ollama 預設會拒絕其他網站的連線，所以要用 `OLLAMA_ORIGINS` 允許 Pages 網址：
+
+```powershell
+# Windows（PowerShell）：設定後從系統匣「Quit Ollama」完全結束，再重新開啟
+setx OLLAMA_ORIGINS "https://<username>.github.io"
+```
+
+```bash
+# macOS（Ollama App）：設定後結束 Ollama 再重新開啟
+launchctl setenv OLLAMA_ORIGINS "https://<username>.github.io"
+# Linux（手動執行）
+OLLAMA_ORIGINS="https://<username>.github.io" ollama serve
+```
+
+- 也可以設成 `*`（允許任何網站），比較簡單但較不安全。
+- Chrome、Edge、Firefox 允許 HTTPS 網頁連到 `http://localhost`；Safari 可能會封鎖。
+- 本機測試網頁：`cd docs && python -m http.server 8000`，再開 <http://localhost:8000>（localhost 來源 Ollama 預設就允許）。
 
 ## 執行結果
 
