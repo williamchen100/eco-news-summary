@@ -64,7 +64,7 @@ async function checkConnection() {
     setStatus(`已連線，但還沒有下載任何模型。請執行：ollama pull ${modelName()}`, "warn");
     return;
   }
-  setStatus(`✅ 已連線！共 ${names.length} 個模型。`, "ok");
+  setStatus(`已連線！共 ${names.length} 個模型。`, "ok");
   $("models").textContent = "已安裝的模型：" + names.join("、");
 }
 
@@ -160,7 +160,7 @@ async function summarize() {
         return;
       }
     }
-    setStatus(`✅ 完成（模型：${model}）`, "ok");
+    setStatus(`完成（模型：${model}）`, "ok");
   } catch (e) {
     if (e.name === "AbortError") setStatus("已停止。", "warn");
     else setStatus(`發生錯誤：${e.message}`, "error");

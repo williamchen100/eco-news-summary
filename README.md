@@ -1,4 +1,4 @@
-# 🌿 生態新聞摘要器（eco-news-summary）
+# 生態新聞摘要器（eco-news-summary）
 
 期中作業：用 Python 呼叫**本地 Ollama 模型**，以**串流（streaming）**方式把生態保育新聞整理成繁體中文重點；另外提供 `--json` **結構化輸出**。
 
@@ -63,7 +63,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 ollama pull qwen2.5:14b
 ```
 
-> 💡 預設模型 `qwen2.5:14b` 約 9GB，執行時大約佔用 9GB VRAM（例如 16GB 顯示卡用掉一半多一點，不會吃滿），中文表現也比小模型好。
+> 提示：預設模型 `qwen2.5:14b` 約 9GB，執行時大約佔用 9GB VRAM（例如 16GB 顯示卡用掉一半多一點，不會吃滿），中文表現也比小模型好。
 > 較輕的電腦或沒有獨立顯示卡，可以改用小模型：先 `ollama pull llama3.2:1b`（或 `qwen2.5:1.5b`），執行時加上 `--model llama3.2:1b`（或 `--model qwen2.5:1.5b`）。
 
 ### 3. 安裝套件
@@ -108,7 +108,7 @@ cp .env.example .env
 | `CLOUD_BASE_URL` | （無） | 雲端 OpenAI 相容 API 位址，例如 `https://api.openai.com/v1` |
 | `CLOUD_MODEL` | （無） | 雲端模型名稱，例如 `gpt-4o-mini` |
 
-> ⚠️ 金鑰只能放在 `.env`。`.env` 已列在 `.gitignore`，**不要**把真實金鑰寫進程式碼或 `.env.example`。
+> 注意：金鑰只能放在 `.env`。`.env` 已列在 `.gitignore`，**不要**把真實金鑰寫進程式碼或 `.env.example`。
 
 ## 網頁線上試玩（連到自己電腦的 Ollama）
 
