@@ -4,7 +4,6 @@
 
 期中作業：用 Python 呼叫**本地 Ollama 模型**，以**串流（streaming）**方式把生態保育新聞整理成繁體中文重點；另外提供 `--json` **結構化輸出**。
 
-- 專案網站（GitHub Pages）：`https://<你的帳號>.github.io/<repo 名稱>/`（部署後填入）
 
 ## 功能
 
